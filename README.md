@@ -18,3 +18,25 @@ You can see a list of available commands by executing:
 ```sh
 make help
 ```
+
+## Examples
+
+```sh
+# Launch a terminal in the Ruby on Rails container
+make terminal
+
+# Create & migrate databases (you can call multiple make targets)
+make setup migrate seed
+
+# Start all docker containers in the background
+make up
+
+# View the logs of the docker containers
+make logs
+
+# Run RSpec
+make rspec
+
+# Launcha  rails console
+make console
+```
