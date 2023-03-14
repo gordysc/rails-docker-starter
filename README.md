@@ -40,3 +40,8 @@ make rspec
 # Launcha  rails console
 make console
 ```
+
+## Additional Resources
+
+1. [tailwindcss](https://tailwindcss.com/docs/installation)
+2. [esbuild](https://esbuild.github.io/)
