@@ -1,0 +1,58 @@
+ARG RUBY_VERSION=3.2.0
+ARG VARIANT=slim-bullseye
+
+FROM ruby:${RUBY_VERSION}-${VARIANT} AS base
+
+# Define a few environment variables
+ENV RAILS_LOG_TO_STDOUT=true
+ENV RAILS_SERVE_STATIC_FILES true
+
+# Create work directory
+RUN mkdir /app
+RUN mkdir -p /app/tmp/pids
+WORKDIR /app
+
+# Install OS dependencies
+ARG BUILD_PACKAGES="build-essential curl gzip libpq-dev libsqlite3-dev tmux vim wget xz-utils"
+ENV BUILD_PACKAGES ${BUILD_PACKAGES}
+
+RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
+  --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
+  apt-get update -qq \
+  && apt-get install --no-install-recommends -y ${BUILD_PACKAGES} \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install the latest overmind version
+ARG OVERMIND_VERSION=2.4.0
+ENV OVERMIND_VERSION ${OVERMIND_VERSION}
+
+RUN wget https://github.com/DarthSim/overmind/releases/download/v${OVERMIND_VERSION}/overmind-v${OVERMIND_VERSION}-linux-amd64.gz \
+  && gunzip overmind-v${OVERMIND_VERSION}-linux-amd64.gz \
+  && mv overmind-v${OVERMIND_VERSION}-linux-amd64 /usr/local/bin/overmind \
+  && chmod +x /usr/local/bin/overmind
+
+# Install the latest Node LTS version
+RUN curl https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get install --no-install-recommends -y nodejs
+
+# Install yarn & node modules
+COPY . .
+
+RUN npm install -g yarn && yarn install --check-files
+
+ENV BUNDLER_VERSION=2.4.7
+ENV RSPEC_VERSION=3.12.0
+ENV RUBOCOP_VERSION=1.46.0
+
+ENV BUNDLE_PATH='vendor/bundle'
+
+RUN gem update --system --no-document \
+  && gem install --no-document bundler -v ${BUNDLER_VERSION} \
+  && gem install --no-document rspec -v ${RSPEC_VERSION} \
+  && gem install --no-document rubocop -v ${RUBOCOP_VERSION} \
+  && bundle install --jobs=20 --retry=5 \
+  && rm -rf /usr/local/bundle/cache/*.gem
+
+ENV PATH="${PATH}:/app/bin"
+
+EXPOSE 3000

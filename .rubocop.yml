@@ -1,0 +1,65 @@
+AllCops:
+  TargetRubyVersion: 3.2.0
+  NewCops: enable
+  Exclude:
+    - "db/**/*"
+    - "bin/**"
+    - "config/**/*"
+    - "lib/tasks/**/*"
+    - "node_modules/**/*"
+    - "vendor/**/*"
+
+# Don't complain about gem name ordering
+# https://docs.rubocop.org/rubocop/cops_bundler.html#bundlerorderedgems
+Bundler/OrderedGems:
+  Enabled: false
+
+# Allow lines to be up to 120 characters
+# https://docs.rubocop.org/rubocop/cops_layout.html#layoutlinelength
+Layout/LineLength:
+  Max: 120
+
+# Increase the maximum ABC size to 30
+# https://docs.rubocop.org/rubocop/cops_metrics.html#metricsabcsize
+Metrics/AbcSize:
+  Max: 30
+
+# Don't complain about block length
+# https://docs.rubocop.org/rubocop/cops_metrics.html#metricsblocklength
+Metrics/BlockLength:
+  Enabled: false
+
+# Don't allow more than 8 routes thru a method
+# https://docs.rubocop.org/rubocop/cops_metrics.html#metricscyclomaticcomplexity
+Metrics/CyclomaticComplexity:
+  Max: 8
+
+# Increase the maximum method length to 25 lines
+# https://docs.rubocop.org/rubocop/cops_metrics.html#metricsmethodlength
+Metrics/MethodLength:
+  Max: 25
+
+# Relax constraints on parameter names
+# https://docs.rubocop.org/rubocop/cops_naming.html#namingmethodparametername
+Naming/MethodParameterName:
+  Enabled: false
+
+# Allow variable names to contain numbers (eg address_1)
+# https://docs.rubocop.org/rubocop/cops_naming.html#namingvariablename
+Naming/VariableNumber:
+  Enabled: false
+
+# Don't complain about top-level class documentation comments.
+# https://docs.rubocop.org/rubocop/cops_style.html#styledocumentation
+Style/Documentation:
+  Enabled: false
+
+# Don't use shorthand syntax for hashes
+# https://docs.rubocop.org/rubocop/cops_style.html#stylehashsyntax
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
+# Don't enforce concerns included on separate lines
+# https://docs.rubocop.org/rubocop/cops_style.html#stylemixingrouping
+Style/MixinGrouping:
+  Enabled: false
